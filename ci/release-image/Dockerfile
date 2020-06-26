@@ -37,7 +37,14 @@ RUN ARCH="$(dpkg --print-architecture)" && \
 COPY release-packages/code-server*.deb /tmp/
 RUN dpkg -i /tmp/code-server*$(dpkg --print-architecture).deb && rm /tmp/code-server*.deb
 
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN apt-get install -y nodejs
+
+RUN npm i -g yarn create-react-app
+
 EXPOSE 8080
+EXPOSE 3000
+
 USER coder
 WORKDIR /home/coder
 ENTRYPOINT ["dumb-init", "fixuid", "-q", "/usr/bin/code-server", "--bind-addr", "0.0.0.0:8080", "."]
